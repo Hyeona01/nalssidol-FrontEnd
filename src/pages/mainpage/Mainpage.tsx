@@ -38,7 +38,7 @@ const Mainpage: React.FC = () => {
   const [nowData, setNowData] = useState<ApiNowModel | undefined>();
   const [doldol, setDoldol] = useState<string>("");
 
-  // console.log("nx: " + nx + " ny: " + ny + " city: " + city + " gu: " + gu);
+  console.log("nx: " + nx + " ny: " + ny + " city: " + city + " gu: " + gu);
 
   useEffect(() => {
     fetchFutureData();
