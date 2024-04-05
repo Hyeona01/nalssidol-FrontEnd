@@ -127,8 +127,8 @@ const Mainpage: React.FC = () => {
               gu={gu}
             />
             <ClothesBoxs
-              nowData={nowData === undefined ? DefaultNowModel : nowData}
-              setDoldol={setDoldol}
+            // nowData={nowData === undefined ? DefaultNowModel : nowData}
+            // setDoldol={setDoldol}
             />
             <NalaldolBox
               vilageData={vilageData}

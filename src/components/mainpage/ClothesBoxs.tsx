@@ -10,7 +10,8 @@ type Props = {
   setDoldol(img: string): void;
 };
 
-const ClothesBoxs = ({ nowData, setDoldol }: Props) => {
+const ClothesBoxs = () => {
+  // const ClothesBoxs = ({ nowData, setDoldol }: Props) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   let [outerList, setOuterList] = useState<string[]>([]);
   let [topList, setTopList] = useState<string[]>([]);
@@ -21,22 +22,20 @@ const ClothesBoxs = ({ nowData, setDoldol }: Props) => {
   }, []);
 
   const handleDataSet = async () => {
-    setIsLoading(true);
-
-    API.get(`/api/temperature/${nowData.obsrValue}`)
-      .then((response) => {
-        setOuterList(response.data.outer.split(", "));
-        setTopList(response.data.top.split(", "));
-        setPantsList(response.data.pants.split(", "));
-
-        // console.log(outerList);
-        setDoldol(response.data.dol);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.error("API 요청 실패:", error);
-        setIsLoading(false);
-      });
+    // setIsLoading(true);
+    // API.get(`/api/temperature/${nowData.obsrValue}`)
+    //   .then((response) => {
+    //     setOuterList(response.data.outer.split(", "));
+    //     setTopList(response.data.top.split(", "));
+    //     setPantsList(response.data.pants.split(", "));
+    //     // console.log(outerList);
+    //     setDoldol(response.data.dol);
+    //     setIsLoading(false);
+    //   })
+    //   .catch((error) => {
+    //     console.error("API 요청 실패:", error);
+    //     setIsLoading(false);
+    //   });
   };
 
   return (
