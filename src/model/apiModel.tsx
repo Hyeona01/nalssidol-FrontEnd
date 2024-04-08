@@ -36,3 +36,7 @@ export type skyFilterType = {
   fcstValue: string;
   type: string;
 };
+export type positionType = {
+  x: number;
+  y: number;
+};

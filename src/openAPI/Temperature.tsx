@@ -1,46 +1,37 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import requests from "../../api/weatherAPI/requests";
+import requests from "../api/weatherAPI/requests";
 import axios from "axios";
-import * as S from "./style";
-import TImeSlider from "../../components/mainpage/TimeSlider";
-import SubSlider from "../../components/mainpage/SubSlider";
-import WindowBox from "../../components/mainpage/WindowBox";
-import ClothesBoxs from "../../components/mainpage/ClothesBoxs";
-import NalaldolBox from "../../components/mainpage/NalaldolBox";
-import {
-  ApiNowModel,
-  ApiVilageFuture,
-  DefaultNowModel,
-} from "../../model/apiModel";
+import { ApiNowModel, ApiVilageFuture, positionType } from "../model/apiModel";
 import {
   DefaultCity,
   DefaultGu,
+  DefaultPosition,
   FormattedDate,
   FormattedNowDate,
   FormattedTime,
-} from "../../utils/weatherInfo";
-import Loading from "../loading/Loading";
-import Snow from "../../components/falling/Snow";
+} from "../utils/weatherInfo";
 
-const Mainpage: React.FC = () => {
+const Temperature = () => {
   const location = useLocation();
 
   const city: string = DefaultCity(location.state);
   const gu: string = DefaultGu(location.state);
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [nx, setNx] = useState<number>(60);
-  const [ny, setNy] = useState<number>(127);
+  const [position, setPosition] = useState<positionType>({ x: 60, y: 127 });
   const [vilageData, setVilageData] = useState<ApiVilageFuture[]>([]);
   const [nowData, setNowData] = useState<ApiNowModel | undefined>();
-  const [doldol, setDoldol] = useState<string>("");
-
-  console.log("nx: " + nx + " ny: " + ny + " city: " + city + " gu: " + gu);
 
   useEffect(() => {
-    fetchFutureData();
-    fetchUltraNow();
+    const fetchData = async () => {
+      await fetchFutureData();
+      await fetchUltraNow();
+      await DefaultPosition().then((result) => setPosition(result));
+      setIsLoading(false);
+    };
+
+    fetchData();
   }, []);
 
   // axios instance 정의 -------------------------------------------------
@@ -54,8 +45,8 @@ const Mainpage: React.FC = () => {
       dataType: "JSON",
       base_date: FormattedDate,
       base_time: "2300",
-      nx: nx.toString(),
-      ny: ny.toString(),
+      nx: position.x.toString(),
+      ny: position.y.toString(),
     },
   });
   // 초단기실황 오픈 API
@@ -68,8 +59,8 @@ const Mainpage: React.FC = () => {
       dataType: "JSON",
       base_date: FormattedNowDate,
       base_time: FormattedTime,
-      nx: nx.toString(),
-      ny: ny.toString(),
+      nx: position.x.toString(),
+      ny: position.y.toString(),
     },
   });
 
@@ -81,8 +72,6 @@ const Mainpage: React.FC = () => {
       const { item } = response.data.response.body.items;
 
       setVilageData(item);
-      setNx(item[0].nx);
-      setNy(item[0].ny);
       setIsLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -109,35 +98,16 @@ const Mainpage: React.FC = () => {
   };
 
   return (
-    <>
-      <S.MainpageWrapper>
-        {isLoading ? (
-          <Loading />
-        ) : (
-          <>
-            <Snow style={{ position: "fixed", top: 0, left: 0, zIndex: 100 }} />
-            <TImeSlider vilageData={vilageData} />
-            <SubSlider vilageData={vilageData} />
-            <WindowBox
-              vilageData={vilageData}
-              nowData={nowData === undefined ? DefaultNowModel : nowData}
-              city={city}
-              gu={gu}
-            />
-            <ClothesBoxs
-              nowData={nowData === undefined ? DefaultNowModel : nowData}
-              setDoldol={setDoldol}
-            />
-            <NalaldolBox
-              vilageData={vilageData}
-              doldol={doldol}
-              nowData={nowData === undefined ? DefaultNowModel : nowData}
-            />
-          </>
-        )}
-      </S.MainpageWrapper>
-    </>
+    <div>
+      <div>x좌표 : {position.x}</div>
+      <div>y좌표 : {position.y}</div>
+      <div>시 : {city}</div>
+      <div>구 : {gu}</div>
+      <div>어제 날짜 : {FormattedDate}</div>
+      <div>오늘 날짜 : {FormattedNowDate}</div>
+      <div>현재 시간 : {FormattedTime}</div>
+    </div>
   );
 };
 
-export default Mainpage;
+export default Temperature;

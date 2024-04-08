@@ -1,10 +1,13 @@
-import { ApiNowModel, ApiVilageFuture } from "../model/apiModel";
+import { ApiNowModel, ApiVilageFuture, positionType } from "../model/apiModel";
 
-export const IsDoldolComent = (data: ApiVilageFuture[], now:ApiNowModel | undefined) => {
+export const IsDoldolComent = (
+  data: ApiVilageFuture[],
+  now: ApiNowModel | undefined
+) => {
   let doldolComent;
 
   // 현재온도
-  const nowTemp = now && parseInt(now?.obsrValue)
+  const nowTemp = now && parseInt(now?.obsrValue);
   let temp = nowTemp || 0;
 
   if (
@@ -37,10 +40,11 @@ export const IsDoldolComent = (data: ApiVilageFuture[], now:ApiNowModel | undefi
       </p>
     );
   } else if (
-    (data?.some(
+    data?.some(
       (filteredData) =>
         filteredData.category === "PTY" && filteredData.fcstValue === "0"
-    )) && (temp <= 10)
+    ) &&
+    temp <= 10
   ) {
     doldolComent = (
       <p style={{ textAlign: "center" }}>
@@ -78,7 +82,6 @@ const formattedTime: string = `${String(hours).padStart(2, "0")}${String(
 export const FormattedDate: string = `${year}${month}${day}`;
 export const FormattedNowDate: string = `${year}${month}${nowDay}`;
 export const FormattedTime: string = formattedTime;
-// export const formattedTime: string = `${hours}${minutes}`;
 
 type defaultType = {
   nx: number;
@@ -86,20 +89,48 @@ type defaultType = {
   city: string;
   gu: string;
 };
-export const DefaultNx = (state: defaultType): number => {
-  if (state && typeof state.nx === "number") {
-    return state.nx;
-  } else {
-    return 60;
-  }
+
+export const DefaultPosition = () => {
+  return new Promise<positionType>((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const newPosition: positionType = {
+          x: Math.round(position.coords.latitude),
+          y: Math.round(position.coords.longitude),
+        };
+        resolve(newPosition);
+      },
+      (error) => {
+        alert(error + "위치 허용이 필요합니다.");
+        reject(error);
+      }
+    );
+  });
 };
-export const DefaultNy = (state: defaultType): number => {
-  if (state && typeof state.ny === "number") {
-    return state.ny;
-  } else {
-    return 127;
-  }
-};
+
+// export const DefaultNx = () => {
+//   let x = 60;
+//   navigator.geolocation.getCurrentPosition((position) => {
+//     // console.log(position);
+
+//     x = Math.round(position.coords.latitude);
+//     return Math.round(position.coords.latitude); // 위도
+//   });
+//   console.log("x: ", x);
+//   return x;
+// };
+// export const DefaultNy = () => {
+//   let y = 127;
+//   navigator.geolocation.getCurrentPosition((position) => {
+//     // console.log(position);
+
+//     y = Math.round(position.coords.longitude);
+//     return Math.round(position.coords.longitude); // 경도
+//   });
+//   console.log("y: ", y);
+//   return y;
+// };
+
 export const DefaultCity = (state: defaultType): string => {
   if (state && typeof state.city === "string") {
     return state.city;
