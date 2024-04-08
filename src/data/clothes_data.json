@@ -1,0 +1,57 @@
+[
+  {"startTem": 28, 
+  "endTem": 100, 
+  "outer": ["없음"], 
+  "top":["민소매","린넨 셔츠"],
+  "pants": ["반바지","짧은 치마"],
+  "doldol": "1doldol.png"},
+
+  {"startTem": 23, 
+  "endTem": 27, 
+  "outer": ["없음"], 
+  "top":["반팔","얇은 셔츠"],
+  "pants": ["반바지", "면바지"],
+  "doldol": "2doldol.png"},
+
+  {"startTem": 20, 
+  "endTem": 22, 
+  "outer": ["얇은 가디건"], 
+  "top":["블라우스","긴팔 티"],
+  "pants": ["면바지","슬랙스"],
+  "doldol": "3doldol.png"},
+
+  {"startTem": 17, 
+  "endTem": 19, 
+  "outer": ["얇은 가디건"], 
+  "top":["얇은 니트","맨투맨"],
+  "pants": ["청바지", "면바지"],
+  "doldol": "4doldol.png"},
+
+  {"startTem": 12, 
+  "endTem": 16, 
+  "outer": ["자켓","가디건"], 
+  "top":["니트","후드"],
+  "pants": ["스타킹", "청바지"],
+  "doldol": "5doldol.png"},
+
+  {"startTem": 9,
+  "endTem": 11,
+  "outer": ["트렌치 코트","점퍼"], 
+  "top":["니트","후드"],
+  "pants": ["기모 바지", "청바지"],
+  "doldol": "6doldol.png"},
+
+  {"startTem": 5, 
+  "endTem": 8,
+  "outer": ["울 코트","가죽 자켓"], 
+  "top":["히트텍","니트"],
+  "pants": ["레깅스", "기모 바지"],
+  "doldol": "7doldol.png"},
+  
+  {"startTem": -50, 
+  "endTem": 4, 
+  "outer": ["패딩","두꺼운 코드"], 
+  "top":["누빔 옷","기모 상의"],
+  "pants": ["기모 바지"],
+  "doldol": "8doldol.png"}
+]

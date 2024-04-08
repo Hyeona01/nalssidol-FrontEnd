@@ -12,10 +12,12 @@ import {
   ApiNowModel,
   ApiVilageFuture,
   DefaultNowModel,
+  positionType,
 } from "../../model/apiModel";
 import {
   DefaultCity,
   DefaultGu,
+  DefaultPosition,
   FormattedDate,
   FormattedNowDate,
   FormattedTime,
@@ -29,18 +31,21 @@ const Mainpage: React.FC = () => {
   const city: string = DefaultCity(location.state);
   const gu: string = DefaultGu(location.state);
 
+  const [position, setPosition] = useState<positionType>({ x: 60, y: 127 });
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [nx, setNx] = useState<number>(60);
-  const [ny, setNy] = useState<number>(127);
+
   const [vilageData, setVilageData] = useState<ApiVilageFuture[]>([]);
   const [nowData, setNowData] = useState<ApiNowModel | undefined>();
-  const [doldol, setDoldol] = useState<string>("");
-
-  console.log("nx: " + nx + " ny: " + ny + " city: " + city + " gu: " + gu);
 
   useEffect(() => {
-    fetchFutureData();
-    fetchUltraNow();
+    const fetchData = async () => {
+      await fetchFutureData();
+      await fetchUltraNow();
+      await DefaultPosition().then((result) => setPosition(result));
+      setIsLoading(false);
+    };
+
+    fetchData();
   }, []);
 
   // axios instance 정의 -------------------------------------------------
@@ -54,8 +59,8 @@ const Mainpage: React.FC = () => {
       dataType: "JSON",
       base_date: FormattedDate,
       base_time: "2300",
-      nx: nx.toString(),
-      ny: ny.toString(),
+      nx: position.x.toString(),
+      ny: position.y.toString(),
     },
   });
   // 초단기실황 오픈 API
@@ -68,8 +73,8 @@ const Mainpage: React.FC = () => {
       dataType: "JSON",
       base_date: FormattedNowDate,
       base_time: FormattedTime,
-      nx: nx.toString(),
-      ny: ny.toString(),
+      nx: position.x.toString(),
+      ny: position.y.toString(),
     },
   });
 
@@ -81,8 +86,6 @@ const Mainpage: React.FC = () => {
       const { item } = response.data.response.body.items;
 
       setVilageData(item);
-      setNx(item[0].nx);
-      setNy(item[0].ny);
       setIsLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -126,11 +129,9 @@ const Mainpage: React.FC = () => {
             />
             <ClothesBoxs
               nowData={nowData === undefined ? DefaultNowModel : nowData}
-              setDoldol={setDoldol}
             />
             <NalaldolBox
               vilageData={vilageData}
-              doldol={doldol}
               nowData={nowData === undefined ? DefaultNowModel : nowData}
             />
           </>

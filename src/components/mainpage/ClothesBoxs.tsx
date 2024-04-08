@@ -1,17 +1,15 @@
 import { useEffect, useState } from "react";
 import * as S from "./style";
 import "../../style/styles.css";
-import { API } from "../../api/axios";
 import { ApiNowModel } from "../../model/apiModel";
 import Loading from "../../pages/loading/Loading";
+import clothes_data from "../../data/clothes_data.json";
 
 type Props = {
   nowData: ApiNowModel;
-  setDoldol(img: string): void;
 };
 
-// const ClothesBoxs = () => {
-const ClothesBoxs = ({ nowData, setDoldol }: Props) => {
+const ClothesBoxs = ({ nowData }: Props) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   let [outerList, setOuterList] = useState<string[]>([]);
   let [topList, setTopList] = useState<string[]>([]);
@@ -21,21 +19,24 @@ const ClothesBoxs = ({ nowData, setDoldol }: Props) => {
     handleDataSet();
   }, []);
 
-  const handleDataSet = async () => {
+  const handleDataSet = () => {
     setIsLoading(true);
-    API.get(`/api/temperature/${nowData.obsrValue}`)
-      .then((response) => {
-        setOuterList(response.data.outer.split(", "));
-        setTopList(response.data.top.split(", "));
-        setPantsList(response.data.pants.split(", "));
-        // console.log(outerList);
-        setDoldol(response.data.dol);
+    const temperature = parseInt(nowData.obsrValue); // 현재 온도 값을 숫자로 변환
+
+    clothes_data.forEach((clothes) => {
+      const startTem = clothes.startTem;
+      const endTem = clothes.endTem;
+
+      if (temperature >= startTem && temperature <= endTem) {
+        setOuterList(clothes.outer);
+        setTopList(clothes.top);
+        setPantsList(clothes.pants);
         setIsLoading(false);
-      })
-      .catch((error) => {
-        console.error("API 요청 실패:", error);
-        setIsLoading(false);
-      });
+        return; // 범위를 찾았으므로 반복문 종료
+      }
+    });
+
+    setIsLoading(false);
   };
 
   return (

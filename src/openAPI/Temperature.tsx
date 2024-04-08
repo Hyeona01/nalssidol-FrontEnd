@@ -71,6 +71,8 @@ const Temperature = () => {
       const response = await futureInstance.get(requests.fetchVilageFuture);
       const { item } = response.data.response.body.items;
 
+      console.log(item);
+
       setVilageData(item);
       setIsLoading(false);
     } catch (error) {

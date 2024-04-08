@@ -2,15 +2,18 @@ import * as S from "./style";
 import { ApiNowModel, ApiVilageFuture } from "../../model/apiModel";
 import { IsDoldolComent } from "../../utils/weatherInfo";
 import "../../style/styles.css";
+import { useEffect, useState } from "react";
+import clothes_data from "../../data/clothes_data.json";
 
 type Props = {
   vilageData: ApiVilageFuture[];
-  doldol: string;
   nowData: ApiNowModel;
 };
 
 const NalaldolBox = (props: Props) => {
-  // 돌돌이 밑 계절이미지
+  const [doldolImg, setDoldolImg] = useState("doldol.png");
+  const [seasonImg, setSeasonImg] = useState("/여름 아래.png");
+
   const today: Date = new Date();
   const month: number = today.getMonth() + 1;
 
@@ -32,19 +35,35 @@ const NalaldolBox = (props: Props) => {
     11: "/가을 아래.png",
     12: "/겨울 아래.png",
   };
-  const getSeasonImg = (monthNum: number): string => {
-    return MonthToSeason[monthNum] || "/여름 아래.png";
+
+  const fetchSeasonImg = () => {
+    setSeasonImg(MonthToSeason[month]);
   };
-  const SeasonImg: string = getSeasonImg(month);
-  console.log(SeasonImg);
+  const fetchDoldolImg = () => {
+    const temperature = parseInt(props.nowData.obsrValue); // 현재 온도 값을 숫자로 변환
+
+    clothes_data.forEach((clothes) => {
+      const startTem = clothes.startTem;
+      const endTem = clothes.endTem;
+
+      if (temperature >= startTem && temperature <= endTem) {
+        setDoldolImg(clothes.doldol);
+        return; // 범위를 찾았으므로 반복문 종료
+      }
+    });
+  };
+
+  useEffect(() => {
+    fetchDoldolImg();
+    fetchSeasonImg();
+  }, []);
 
   return (
     <>
       <S.NalaldolBoxWrapper>
         <S.Comment>{IsDoldolComent(props.vilageData, props.nowData)}</S.Comment>
-        <S.Nalaldol src={props.doldol || "/doldol.png"} alt="날알돌" />
-        <S.SeasonBottom src={SeasonImg} alt="계절 아래" />
-        {/* <S.SeasonBottom src="겨울 아래.png" alt="계절 아래" /> */}
+        <S.Nalaldol src={doldolImg || "/doldol.png"} alt="날알돌" />
+        <S.SeasonBottom src={seasonImg} alt="계절 아래" />
       </S.NalaldolBoxWrapper>
     </>
   );
