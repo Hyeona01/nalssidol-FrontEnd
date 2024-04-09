@@ -108,29 +108,6 @@ export const DefaultPosition = () => {
   });
 };
 
-// export const DefaultNx = () => {
-//   let x = 60;
-//   navigator.geolocation.getCurrentPosition((position) => {
-//     // console.log(position);
-
-//     x = Math.round(position.coords.latitude);
-//     return Math.round(position.coords.latitude); // 위도
-//   });
-//   console.log("x: ", x);
-//   return x;
-// };
-// export const DefaultNy = () => {
-//   let y = 127;
-//   navigator.geolocation.getCurrentPosition((position) => {
-//     // console.log(position);
-
-//     y = Math.round(position.coords.longitude);
-//     return Math.round(position.coords.longitude); // 경도
-//   });
-//   console.log("y: ", y);
-//   return y;
-// };
-
 export const DefaultCity = (state: defaultType): string => {
   if (state && typeof state.city === "string") {
     return state.city;

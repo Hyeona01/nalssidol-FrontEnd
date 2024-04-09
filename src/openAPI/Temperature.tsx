@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import requests from "../api/weatherAPI/requests";
 import axios from "axios";
@@ -18,7 +18,6 @@ const Temperature = () => {
   const city: string = DefaultCity(location.state);
   const gu: string = DefaultGu(location.state);
 
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [position, setPosition] = useState<positionType>({ x: 60, y: 127 });
   const [vilageData, setVilageData] = useState<ApiVilageFuture[]>([]);
   const [nowData, setNowData] = useState<ApiNowModel | undefined>();
@@ -28,7 +27,6 @@ const Temperature = () => {
       await fetchFutureData();
       await fetchUltraNow();
       await DefaultPosition().then((result) => setPosition(result));
-      setIsLoading(false);
     };
 
     fetchData();
@@ -74,10 +72,10 @@ const Temperature = () => {
       console.log(item);
 
       setVilageData(item);
-      setIsLoading(false);
+      // setIsLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
-      setIsLoading(false);
+      // setIsLoading(false);
     }
   };
 
@@ -108,6 +106,8 @@ const Temperature = () => {
       <div>어제 날짜 : {FormattedDate}</div>
       <div>오늘 날짜 : {FormattedNowDate}</div>
       <div>현재 시간 : {FormattedTime}</div>
+      <div>vilageData : {vilageData && vilageData[0].fcstValue}</div>
+      <div>nowData : {nowData && nowData.obsrValue}</div>
     </div>
   );
 };
